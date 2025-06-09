@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from core.scripts.sync_conferencia import loop_principal
+from core.scripts.sync import loop_principal
 
 class Command(BaseCommand):
     help = 'Sincroniza os dados da API de conferência em loop'
