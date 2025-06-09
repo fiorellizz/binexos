@@ -16,7 +16,7 @@ from core.application.use_cases import (
     AtualizarTradeInUseCase,
     AtualizarEstoqueFisicoUseCase,
     AtualizarEstoquePorLocalUseCase,
-    # AtualizarVendedoresUseCase,
+    AtualizarVendedoresUseCase,
     AtualizarMetaPorLocalUseCase,
     AtualizarMetaPorVendedorUseCase,
 )
@@ -134,7 +134,7 @@ def sincronizar():
         ("integracao/utilitarios/trade_in/", AtualizarTradeInUseCase, True),
         ("integracao/produtos/estoque_fisico/", AtualizarEstoqueFisicoUseCase, False),
         ("integracao/produtos/estoque_por_local/", AtualizarEstoquePorLocalUseCase, False),
-        # ("integracao/vendedores/cadastro/", AtualizarVendedoresUseCase, False),
+        ("integracao/vendedores/cadastro/", AtualizarVendedoresUseCase, False),
         ("integracao/utilitarios/meta_por_local/", AtualizarMetaPorLocalUseCase, False),
         ("integracao/utilitarios/meta_por_vendedor/", AtualizarMetaPorVendedorUseCase, False),
     ]
@@ -166,8 +166,8 @@ def sincronizar():
 def loop_principal():
     while True:
         sincronizar()
-        print("🕒 Aguardando 20 minutos...")
-        time.sleep(20 * 60)
+        print("🕒 Aguardando 2 minutos...")
+        time.sleep(2 * 60)
 
 if __name__ == "__main__":
     loop_principal()

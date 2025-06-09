@@ -171,3 +171,13 @@ class ValoresAReceberModel(models.Model):
 
     def __str__(self):
         return f"{self.nome} - {self.nomvendedor} - {self.data}"
+
+class VendedorModel(models.Model):
+    codigo = models.CharField(max_length=50)
+    nome = models.CharField(max_length=255)
+    gerente = models.CharField(max_length=5)
+    bloqueado = models.CharField(max_length=5)
+    local = models.CharField(max_length=255, blank=True)
+
+    def __str__(self):
+        return f"{self.nome} ({self.codigo})"

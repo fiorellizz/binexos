@@ -1,4 +1,4 @@
-from core.infrastructure.models import ConferenciaModel, DetalhadoProdutoModel, EstoqueFisicoModel, EstoquePorLocalModel, MetaPorLocalModel, MetaPorVendedorModel, TradeInModel, ValoresAReceberModel
+from core.infrastructure.models import ConferenciaModel, DetalhadoProdutoModel, EstoqueFisicoModel, EstoquePorLocalModel, MetaPorLocalModel, MetaPorVendedorModel, TradeInModel, ValoresAReceberModel, VendedorModel
 
 def parse_int(val):
     try:
@@ -206,4 +206,16 @@ class ValoresAReceberRepository:
                 obs=item.get("obs", ""),
                 estado_cliente=item.get("estado_cliente", ""),
                 cobertura_residenc=item.get("cobertura_residenc", "")
+            )
+
+class VendedorRepository:
+    def salvar_lista(self, lista):
+        VendedorModel.objects.all().delete()
+        for item in lista:
+            VendedorModel.objects.create(
+                codigo=item.get("Código", ""),
+                nome=item.get("Nome", ""),
+                gerente=item.get("Gerente", ""),
+                bloqueado=item.get("Bloqueado", ""),
+                local=item.get("Local", "")
             )
