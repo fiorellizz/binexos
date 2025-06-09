@@ -10,7 +10,7 @@ django.setup()
 
 from core.application.use_cases import (
     AtualizarConferenciaUseCase,
-    # AtualizarValoresReceberUseCase,
+    AtualizarValoresReceberUseCase,
     AtualizarDetalhadoProdutoUseCase,
     # AtualizarServicosUseCase,
     AtualizarTradeInUseCase,
@@ -147,10 +147,10 @@ def sincronizar():
         print(f"✅ {len(dados)} registros sincronizados para {idRelat}")
 
     relatorios_paginados = {
-        # "valores_a_receber": {
-        #     "url": f"{BASE_URL}integracaoV1/operadora/valores_a_receber/",
-        #     "use_case": AtualizarValoresReceberUseCase
-        # },
+        "valores_a_receber": {
+            "url": f"{BASE_URL}integracaoV1/operadora/valores_a_receber/",
+            "use_case": AtualizarValoresReceberUseCase
+        },
         "conferencia": {
             "url": f"{BASE_URL}integracaoV1/atendimentos/conferencia/",
             "use_case": AtualizarConferenciaUseCase

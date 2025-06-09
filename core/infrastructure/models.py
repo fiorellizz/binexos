@@ -132,3 +132,42 @@ class TradeInModel(models.Model):
 
     def __str__(self):
         return f"{self.desc_produto} - {self.vendedor} - {self.data_atend}"
+
+class ValoresAReceberModel(models.Model):
+    nome = models.CharField(max_length=255)
+    data = models.DateField()
+    atend = models.IntegerField()
+    tipo = models.CharField(max_length=100)
+    plano = models.CharField(max_length=255)
+    descricao = models.CharField(max_length=255, blank=True)
+    nomvendedor = models.CharField(max_length=255)
+    dessituacao = models.CharField(max_length=100, blank=True)
+    status_ged = models.CharField(max_length=50)
+    comissao = models.DecimalField(max_digits=10, decimal_places=2)
+    comissaor = models.DecimalField(max_digits=10, decimal_places=2)
+    comissao_premium = models.DecimalField(max_digits=10, decimal_places=2)
+    comissaor_premium = models.DecimalField(max_digits=10, decimal_places=2)
+    comissao_max = models.DecimalField(max_digits=10, decimal_places=2)
+    comissaor_max = models.DecimalField(max_digits=10, decimal_places=2)
+    operadorap = models.CharField(max_length=100, blank=True)
+    cidadecliente = models.CharField(max_length=100)
+    codclaro = models.CharField(max_length=50)
+    assinatura = models.DecimalField(max_digits=10, decimal_places=2)
+    delta = models.DecimalField(max_digits=10, decimal_places=2)
+    rebate = models.DecimalField(max_digits=10, decimal_places=2)
+    valorcartao = models.DecimalField(max_digits=10, decimal_places=2)
+    valoradic = models.DecimalField(max_digits=10, decimal_places=2)
+    codmovimen = models.IntegerField()
+    auditoria_cc = models.CharField(max_length=10)
+    auditoria_cr = models.CharField(max_length=10)
+    margem = models.DecimalField(max_digits=10, decimal_places=2)
+    margemp = models.DecimalField(max_digits=10, decimal_places=2)
+    instalacao = models.CharField(max_length=50, blank=True)
+    franquia_total = models.DecimalField(max_digits=10, decimal_places=5)
+    dtvencimento = models.DateField(null=True, blank=True)
+    obs = models.TextField(blank=True)
+    estado_cliente = models.CharField(max_length=50)
+    cobertura_residenc = models.CharField(max_length=10)
+
+    def __str__(self):
+        return f"{self.nome} - {self.nomvendedor} - {self.data}"

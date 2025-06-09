@@ -1,4 +1,4 @@
-from core.infrastructure.models import ConferenciaModel, DetalhadoProdutoModel, EstoqueFisicoModel, EstoquePorLocalModel, MetaPorLocalModel, MetaPorVendedorModel, TradeInModel
+from core.infrastructure.models import ConferenciaModel, DetalhadoProdutoModel, EstoqueFisicoModel, EstoquePorLocalModel, MetaPorLocalModel, MetaPorVendedorModel, TradeInModel, ValoresAReceberModel
 
 def parse_int(val):
     try:
@@ -165,4 +165,45 @@ class TradeInRepository:
                 situacao_caixa=item.get("Situação Caixa", ""),
                 id_base=parse_int(item.get("Id")),
                 id_situacao=parse_int(item.get("Id Situação")),
+            )
+
+class ValoresAReceberRepository:
+    def salvar_lista(self, lista):
+        ValoresAReceberModel.objects.all().delete()
+        for item in lista:
+            ValoresAReceberModel.objects.create(
+                nome=item.get("nome", ""),
+                data=parse_date(item.get("data")),
+                atend=parse_int(item.get("atend")),
+                tipo=item.get("tipo", ""),
+                plano=item.get("plano", ""),
+                descricao=item.get("descricao", ""),
+                nomvendedor=item.get("nomvendedor", ""),
+                dessituacao=item.get("dessituacao", ""),
+                status_ged=item.get("status_ged", ""),
+                comissao=parse_float(item.get("comissao")),
+                comissaor=parse_float(item.get("comissaor")),
+                comissao_premium=parse_float(item.get("comissao_premium")),
+                comissaor_premium=parse_float(item.get("comissaor_premium")),
+                comissao_max=parse_float(item.get("comissao_max")),
+                comissaor_max=parse_float(item.get("comissaor_max")),
+                operadorap=item.get("operadorap", ""),
+                cidadecliente=item.get("cidadecliente", ""),
+                codclaro=item.get("codclaro", ""),
+                assinatura=parse_float(item.get("assinatura")),
+                delta=parse_float(item.get("delta")),
+                rebate=parse_float(item.get("rebate")),
+                valorcartao=parse_float(item.get("valorcartao")),
+                valoradic=parse_float(item.get("valoradic")),
+                codmovimen=parse_int(item.get("codmovimen")),
+                auditoria_cc=item.get("auditoria_cc", ""),
+                auditoria_cr=item.get("auditoria_cr", ""),
+                margem=parse_float(item.get("margem")),
+                margemp=parse_float(item.get("margemp")),
+                instalacao=item.get("instalacao", ""),
+                franquia_total=parse_float(item.get("franquia_total")),
+                dtvencimento=parse_date(item.get("dtvencimento")),
+                obs=item.get("obs", ""),
+                estado_cliente=item.get("estado_cliente", ""),
+                cobertura_residenc=item.get("cobertura_residenc", "")
             )
