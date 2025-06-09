@@ -1,8 +1,8 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from core.decorators import require_token
-from core.infrastructure.models import ConferenciaModel, DetalhadoProdutoModel, EstoqueFisicoModel, EstoquePorLocalModel, MetaPorLocalModel
-from core.serializers import ConferenciaSerializer, DetalhadoProdutoSerializer, EstoqueFisicoSerializer, EstoquePorLocalSerializer, MetaPorLocalSerializer
+from core.infrastructure.models import ConferenciaModel, DetalhadoProdutoModel, EstoqueFisicoModel, EstoquePorLocalModel, MetaPorLocalModel, MetaPorVendedorModel
+from core.serializers import ConferenciaSerializer, DetalhadoProdutoSerializer, EstoqueFisicoSerializer, EstoquePorLocalSerializer, MetaPorLocalSerializer, MetaPorVendedorSerializer
 
 class ConferenciaAPIView(APIView):
     @require_token
@@ -40,4 +40,12 @@ class MetaPorLocalAPIView(APIView):
     def get(self, request):
         dados = MetaPorLocalModel.objects.all()
         serializer = MetaPorLocalSerializer(dados, many=True)
+        return Response(serializer.data)
+    
+class MetaPorVendedorAPIView(APIView):
+
+    @require_token
+    def get(self, request):
+        dados = MetaPorVendedorModel.objects.all()
+        serializer = MetaPorVendedorSerializer(dados, many=True)
         return Response(serializer.data)

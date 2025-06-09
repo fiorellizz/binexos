@@ -18,7 +18,7 @@ from core.application.use_cases import (
     AtualizarEstoquePorLocalUseCase,
     # AtualizarVendedoresUseCase,
     AtualizarMetaPorLocalUseCase,
-    # AtualizarMetaPorVendedorUseCase,
+    AtualizarMetaPorVendedorUseCase,
 )
 
 BASE_URL = "https://self.controlecelular.com.br/api/v1/"
@@ -136,7 +136,7 @@ def sincronizar():
         ("integracao/produtos/estoque_por_local/", AtualizarEstoquePorLocalUseCase, False),
         # ("integracao/vendedores/cadastro/", AtualizarVendedoresUseCase, False),
         ("integracao/utilitarios/meta_por_local/", AtualizarMetaPorLocalUseCase, False),
-        # ("integracao/utilitarios/meta_por_vendedor/", AtualizarMetaPorVendedorUseCase, False),
+        ("integracao/utilitarios/meta_por_vendedor/", AtualizarMetaPorVendedorUseCase, False),
     ]
 
     for idRelat, use_case_class, incluir_datas in relatorios_recibo:

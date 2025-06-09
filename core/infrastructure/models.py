@@ -98,3 +98,16 @@ class MetaPorLocalModel(models.Model):
 
     def __str__(self):
         return f"{self.mes}/{self.ano} - {self.local} - {self.grupo}"
+
+class MetaPorVendedorModel(models.Model):
+    mes = models.IntegerField()
+    ano = models.IntegerField()
+    vendedor = models.CharField(max_length=255, blank=True)
+    grupo = models.CharField(max_length=100)
+    descricao = models.CharField(max_length=255)
+    meta_por_valor = models.CharField(max_length=5)
+    qtd = models.IntegerField(null=True, blank=True)
+    valor = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.mes}/{self.ano} - {self.vendedor or 'Sem Vendedor'}"

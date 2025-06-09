@@ -1,5 +1,5 @@
 from django.urls import path
-from core.interfaces.views import ConferenciaAPIView, DetalhadoProdutoAPIView, EstoqueFisicoAPIView, EstoquePorLocalAPIView, MetaPorLocalAPIView
+from core.interfaces.views import ConferenciaAPIView, DetalhadoProdutoAPIView, EstoqueFisicoAPIView, EstoquePorLocalAPIView, MetaPorLocalAPIView, MetaPorVendedorAPIView
 
 urlpatterns = [
     path('dados/conferencia/', ConferenciaAPIView.as_view(), name='conferencia'),
@@ -7,4 +7,5 @@ urlpatterns = [
     path("dados/estoque_fisico/", EstoqueFisicoAPIView.as_view(), name="estoque_fisico"),
     path("dados/estoque_por_local/", EstoquePorLocalAPIView.as_view(), name="estoque_por_local"),
     path("dados/meta_por_local/", MetaPorLocalAPIView.as_view(), name="meta_por_local"),
+    path("dados/meta_por_vendedor/", MetaPorVendedorAPIView.as_view(), name="meta_por_vendedor"),
 ]

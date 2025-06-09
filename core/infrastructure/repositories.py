@@ -1,4 +1,4 @@
-from core.infrastructure.models import ConferenciaModel, DetalhadoProdutoModel, EstoqueFisicoModel, EstoquePorLocalModel, MetaPorLocalModel
+from core.infrastructure.models import ConferenciaModel, DetalhadoProdutoModel, EstoqueFisicoModel, EstoquePorLocalModel, MetaPorLocalModel, MetaPorVendedorModel
 
 def parse_int(val):
     try:
@@ -122,6 +122,21 @@ class MetaPorLocalRepository:
                 mes=parse_int(item.get("Mês")),
                 ano=parse_int(item.get("Ano")),
                 local=item.get("Local", ""),
+                grupo=item.get("Grupo", ""),
+                descricao=item.get("Descrição", ""),
+                meta_por_valor=item.get("Meta por valor", ""),
+                qtd=parse_int(item.get("Qtd")),
+                valor=parse_float(item.get("Valor"))
+            )
+
+class MetaPorVendedorRepository:
+    def salvar_lista(self, lista):
+        MetaPorVendedorModel.objects.all().delete()
+        for item in lista:
+            MetaPorVendedorModel.objects.create(
+                mes=parse_int(item.get("Mês")),
+                ano=parse_int(item.get("Ano")),
+                vendedor=item.get("Vendedor", "") or "",
                 grupo=item.get("Grupo", ""),
                 descricao=item.get("Descrição", ""),
                 meta_por_valor=item.get("Meta por valor", ""),
