@@ -1,4 +1,4 @@
-from core.infrastructure.models import ConferenciaModel, DetalhadoProdutoModel, EstoqueFisicoModel
+from core.infrastructure.models import ConferenciaModel, DetalhadoProdutoModel, EstoqueFisicoModel, EstoquePorLocalModel
 
 def parse_int(val):
     try:
@@ -100,4 +100,16 @@ class EstoqueFisicoRepository:
                 data_entrada=parse_date(item.get("Data Entrada")),
                 venda=parse_float(item.get("Venda")),
                 custo=parse_float(item.get("Custo")),
+            )
+
+class EstoquePorLocalRepository:
+    def salvar_lista(self, lista):
+        EstoquePorLocalModel.objects.all().delete()
+        for item in lista:
+            EstoquePorLocalModel.objects.create(
+                cod_produto=item.get("Cod Produto", ""),
+                descricao=item.get("Descrição", ""),
+                cod_local=item.get("Cod Local", ""),
+                local=item.get("Local", ""),
+                estoque=parse_int(item.get("Estoque"))
             )

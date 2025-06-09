@@ -75,3 +75,13 @@ class EstoqueFisicoModel(models.Model):
 
     def __str__(self):
         return f"{self.descricao} - {self.local}"
+
+class EstoquePorLocalModel(models.Model):
+    cod_produto = models.CharField(max_length=50)
+    descricao = models.CharField(max_length=255)
+    cod_local = models.CharField(max_length=50)
+    local = models.CharField(max_length=255)
+    estoque = models.IntegerField(null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.descricao} - {self.local}"
