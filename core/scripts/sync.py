@@ -17,7 +17,7 @@ from core.application.use_cases import (
     AtualizarEstoqueFisicoUseCase,
     AtualizarEstoquePorLocalUseCase,
     # AtualizarVendedoresUseCase,
-    # AtualizarMetaPorLocalUseCase,
+    AtualizarMetaPorLocalUseCase,
     # AtualizarMetaPorVendedorUseCase,
 )
 
@@ -135,7 +135,7 @@ def sincronizar():
         ("integracao/produtos/estoque_fisico/", AtualizarEstoqueFisicoUseCase, False),
         ("integracao/produtos/estoque_por_local/", AtualizarEstoquePorLocalUseCase, False),
         # ("integracao/vendedores/cadastro/", AtualizarVendedoresUseCase, False),
-        # ("integracao/utilitarios/meta_por_local/", AtualizarMetaPorLocalUseCase, False),
+        ("integracao/utilitarios/meta_por_local/", AtualizarMetaPorLocalUseCase, False),
         # ("integracao/utilitarios/meta_por_vendedor/", AtualizarMetaPorVendedorUseCase, False),
     ]
 
