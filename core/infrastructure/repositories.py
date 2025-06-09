@@ -1,4 +1,4 @@
-from core.infrastructure.models import ConferenciaModel, DetalhadoProdutoModel, EstoqueFisicoModel, EstoquePorLocalModel, MetaPorLocalModel, MetaPorVendedorModel
+from core.infrastructure.models import ConferenciaModel, DetalhadoProdutoModel, EstoqueFisicoModel, EstoquePorLocalModel, MetaPorLocalModel, MetaPorVendedorModel, TradeInModel
 
 def parse_int(val):
     try:
@@ -142,4 +142,27 @@ class MetaPorVendedorRepository:
                 meta_por_valor=item.get("Meta por valor", ""),
                 qtd=parse_int(item.get("Qtd")),
                 valor=parse_float(item.get("Valor"))
+            )
+
+class TradeInRepository:
+    def salvar_lista(self, lista):
+        TradeInModel.objects.all().delete()
+        for item in lista:
+            TradeInModel.objects.create(
+                data_atend=parse_date(item.get("Data Atend")),
+                id_atend=parse_int(item.get("Id Atend")),
+                empresa=item.get("Empresa", ""),
+                id_registro=item.get("Id Registro", ""),
+                desc_produto=item.get("Desc Produto", ""),
+                imei=item.get("Imei", ""),
+                imei_novo=item.get("Imei Novo", ""),
+                valor=parse_float(item.get("Valor")),
+                situacao=item.get("Situação", ""),
+                cod_local=item.get("Cod Local", ""),
+                local=item.get("Local", ""),
+                vendedor=item.get("Vendedor", ""),
+                cliente=item.get("Cliente", ""),
+                situacao_caixa=item.get("Situação Caixa", ""),
+                id_base=parse_int(item.get("Id")),
+                id_situacao=parse_int(item.get("Id Situação")),
             )

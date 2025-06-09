@@ -111,3 +111,24 @@ class MetaPorVendedorModel(models.Model):
 
     def __str__(self):
         return f"{self.mes}/{self.ano} - {self.vendedor or 'Sem Vendedor'}"
+
+class TradeInModel(models.Model):
+    data_atend = models.DateField()
+    id_atend = models.IntegerField()
+    empresa = models.CharField(max_length=100)
+    id_registro = models.CharField(max_length=100)
+    desc_produto = models.CharField(max_length=255)
+    imei = models.CharField(max_length=30)
+    imei_novo = models.CharField(max_length=30)
+    valor = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)
+    situacao = models.CharField(max_length=100)
+    cod_local = models.CharField(max_length=50)
+    local = models.CharField(max_length=255)
+    vendedor = models.CharField(max_length=255)
+    cliente = models.CharField(max_length=255)
+    situacao_caixa = models.CharField(max_length=100)
+    id_base = models.IntegerField()
+    id_situacao = models.IntegerField()
+
+    def __str__(self):
+        return f"{self.desc_produto} - {self.vendedor} - {self.data_atend}"

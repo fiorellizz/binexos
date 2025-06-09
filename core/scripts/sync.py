@@ -13,7 +13,7 @@ from core.application.use_cases import (
     # AtualizarValoresReceberUseCase,
     AtualizarDetalhadoProdutoUseCase,
     # AtualizarServicosUseCase,
-    # AtualizarTradeInUseCase,
+    AtualizarTradeInUseCase,
     AtualizarEstoqueFisicoUseCase,
     AtualizarEstoquePorLocalUseCase,
     # AtualizarVendedoresUseCase,
@@ -131,7 +131,7 @@ def sincronizar():
     relatorios_recibo = [
         ("integracao/atendimentos/detalhado_produto/", AtualizarDetalhadoProdutoUseCase, True),
         # ("integracao/atendimentos/servicos/", AtualizarServicosUseCase, True),
-        # ("integracao/utilitarios/trade_in/", AtualizarTradeInUseCase, True),
+        ("integracao/utilitarios/trade_in/", AtualizarTradeInUseCase, True),
         ("integracao/produtos/estoque_fisico/", AtualizarEstoqueFisicoUseCase, False),
         ("integracao/produtos/estoque_por_local/", AtualizarEstoquePorLocalUseCase, False),
         # ("integracao/vendedores/cadastro/", AtualizarVendedoresUseCase, False),

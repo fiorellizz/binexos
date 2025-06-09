@@ -1,4 +1,4 @@
-from core.infrastructure.repositories import ConferenciaRepository, DetalhadoProdutoRepository, EstoqueFisicoRepository, EstoquePorLocalRepository, MetaPorLocalRepository, MetaPorVendedorRepository
+from core.infrastructure.repositories import ConferenciaRepository, DetalhadoProdutoRepository, EstoqueFisicoRepository, EstoquePorLocalRepository, MetaPorLocalRepository, MetaPorVendedorRepository, TradeInRepository
 
 class AtualizarConferenciaUseCase:
     def __init__(self):
@@ -38,6 +38,13 @@ class AtualizarMetaPorLocalUseCase:
 class AtualizarMetaPorVendedorUseCase:
     def __init__(self):
         self.repo = MetaPorVendedorRepository()
+
+    def executar(self, dados):
+        self.repo.salvar_lista(dados)
+
+class AtualizarTradeInUseCase:
+    def __init__(self):
+        self.repo = TradeInRepository()
 
     def executar(self, dados):
         self.repo.salvar_lista(dados)
