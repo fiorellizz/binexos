@@ -9,16 +9,16 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "meu_projeto.settings")
 django.setup()
 
 from core.application.use_cases import (
-    AtualizarConferenciaUseCase,
+    # AtualizarConferenciaUseCase,
     AtualizarValoresReceberUseCase,
-    AtualizarDetalhadoProdutoUseCase,
-    # AtualizarServicosUseCase,
-    AtualizarTradeInUseCase,
-    AtualizarEstoqueFisicoUseCase,
-    AtualizarEstoquePorLocalUseCase,
-    AtualizarVendedoresUseCase,
-    AtualizarMetaPorLocalUseCase,
-    AtualizarMetaPorVendedorUseCase,
+    # AtualizarDetalhadoProdutoUseCase,
+    # # AtualizarServicosUseCase,
+    # AtualizarTradeInUseCase,
+    # AtualizarEstoqueFisicoUseCase,
+    # AtualizarEstoquePorLocalUseCase,
+    # AtualizarVendedoresUseCase,
+    # AtualizarMetaPorLocalUseCase,
+    # AtualizarMetaPorVendedorUseCase,
 )
 
 BASE_URL = "https://self.controlecelular.com.br/api/v1/"
@@ -114,6 +114,10 @@ def baixar_paginado(token, endpoint_url):
                 break
             elif resp.status_code == 400:
                 continue
+            elif resp.status_code == 401:
+                token = obter_token()
+                headers["Authorization"] = f"Bearer {token}"
+                break
             else:
                 print(f"Erro na página {page}: {resp.status_code}")
                 return all_rows
@@ -121,40 +125,41 @@ def baixar_paginado(token, endpoint_url):
         rows = resp.json().get("list", [])
         all_rows.extend(rows)
         print(f"Página {page}/{total_pages} com {len(rows)} registros")
-        time.sleep(1)
 
     return all_rows
 
 def sincronizar():
+    # token = obter_token()
+
+    # relatorios_recibo = [
+    #     ("integracao/atendimentos/detalhado_produto/", AtualizarDetalhadoProdutoUseCase, True),
+    #     # ("integracao/atendimentos/servicos/", AtualizarServicosUseCase, True),
+    #     ("integracao/utilitarios/trade_in/", AtualizarTradeInUseCase, True),
+    #     ("integracao/produtos/estoque_fisico/", AtualizarEstoqueFisicoUseCase, False),
+    #     ("integracao/produtos/estoque_por_local/", AtualizarEstoquePorLocalUseCase, False),
+    #     ("integracao/vendedores/cadastro/", AtualizarVendedoresUseCase, False),
+    #     ("integracao/utilitarios/meta_por_local/", AtualizarMetaPorLocalUseCase, False),
+    #     ("integracao/utilitarios/meta_por_vendedor/", AtualizarMetaPorVendedorUseCase, False),
+    # ]
+
+    # for idRelat, use_case_class, incluir_datas in relatorios_recibo:
+    #     print(f"\n➡️ Relatório {idRelat}")
+    #     recibo = solicitar_recibo(token, idRelat, incluir_datas)
+    #     dados = baixar_relatorio(token, idRelat, recibo)
+    #     use_case_class().executar(dados)
+    #     print(f"✅ {len(dados)} registros sincronizados para {idRelat}")
+
     token = obter_token()
-
-    relatorios_recibo = [
-        ("integracao/atendimentos/detalhado_produto/", AtualizarDetalhadoProdutoUseCase, True),
-        # ("integracao/atendimentos/servicos/", AtualizarServicosUseCase, True),
-        ("integracao/utilitarios/trade_in/", AtualizarTradeInUseCase, True),
-        ("integracao/produtos/estoque_fisico/", AtualizarEstoqueFisicoUseCase, False),
-        ("integracao/produtos/estoque_por_local/", AtualizarEstoquePorLocalUseCase, False),
-        ("integracao/vendedores/cadastro/", AtualizarVendedoresUseCase, False),
-        ("integracao/utilitarios/meta_por_local/", AtualizarMetaPorLocalUseCase, False),
-        ("integracao/utilitarios/meta_por_vendedor/", AtualizarMetaPorVendedorUseCase, False),
-    ]
-
-    for idRelat, use_case_class, incluir_datas in relatorios_recibo:
-        print(f"\n➡️ Relatório {idRelat}")
-        recibo = solicitar_recibo(token, idRelat, incluir_datas)
-        dados = baixar_relatorio(token, idRelat, recibo)
-        use_case_class().executar(dados)
-        print(f"✅ {len(dados)} registros sincronizados para {idRelat}")
 
     relatorios_paginados = {
         "valores_a_receber": {
             "url": f"{BASE_URL}integracaoV1/operadora/valores_a_receber/",
             "use_case": AtualizarValoresReceberUseCase
         },
-        "conferencia": {
-            "url": f"{BASE_URL}integracaoV1/atendimentos/conferencia/",
-            "use_case": AtualizarConferenciaUseCase
-        }
+        # "conferencia": {
+        #     "url": f"{BASE_URL}integracaoV1/atendimentos/conferencia/",
+        #     "use_case": AtualizarConferenciaUseCase
+        # }
     }
 
     for nome, config in relatorios_paginados.items():
@@ -166,8 +171,8 @@ def sincronizar():
 def loop_principal():
     while True:
         sincronizar()
-        print("🕒 Aguardando 2 minutos...")
-        time.sleep(2 * 60)
+        print("🕒 Aguardando 1 minutos...")
+        time.sleep(1 * 60)
 
 if __name__ == "__main__":
     loop_principal()
