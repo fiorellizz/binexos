@@ -11,7 +11,7 @@ django.setup()
 from core.application.use_cases import (
     # AtualizarConferenciaUseCase,
     AtualizarValoresReceberUseCase,
-    # AtualizarDetalhadoProdutoUseCase,
+    AtualizarDetalhadoProdutoUseCase,
     # # AtualizarServicosUseCase,
     # AtualizarTradeInUseCase,
     # AtualizarEstoqueFisicoUseCase,
@@ -129,25 +129,25 @@ def baixar_paginado(token, endpoint_url):
     return all_rows
 
 def sincronizar():
-    # token = obter_token()
+    token = obter_token()
 
-    # relatorios_recibo = [
-    #     ("integracao/atendimentos/detalhado_produto/", AtualizarDetalhadoProdutoUseCase, True),
-    #     # ("integracao/atendimentos/servicos/", AtualizarServicosUseCase, True),
-    #     ("integracao/utilitarios/trade_in/", AtualizarTradeInUseCase, True),
-    #     ("integracao/produtos/estoque_fisico/", AtualizarEstoqueFisicoUseCase, False),
-    #     ("integracao/produtos/estoque_por_local/", AtualizarEstoquePorLocalUseCase, False),
-    #     ("integracao/vendedores/cadastro/", AtualizarVendedoresUseCase, False),
-    #     ("integracao/utilitarios/meta_por_local/", AtualizarMetaPorLocalUseCase, False),
-    #     ("integracao/utilitarios/meta_por_vendedor/", AtualizarMetaPorVendedorUseCase, False),
-    # ]
+    relatorios_recibo = [
+        ("integracao/atendimentos/detalhado_produto/", AtualizarDetalhadoProdutoUseCase, True),
+        # ("integracao/atendimentos/servicos/", AtualizarServicosUseCase, True),
+        # ("integracao/utilitarios/trade_in/", AtualizarTradeInUseCase, True),
+        # ("integracao/produtos/estoque_fisico/", AtualizarEstoqueFisicoUseCase, False),
+        # ("integracao/produtos/estoque_por_local/", AtualizarEstoquePorLocalUseCase, False),
+        # ("integracao/vendedores/cadastro/", AtualizarVendedoresUseCase, False),
+        # ("integracao/utilitarios/meta_por_local/", AtualizarMetaPorLocalUseCase, False),
+        # ("integracao/utilitarios/meta_por_vendedor/", AtualizarMetaPorVendedorUseCase, False),
+    ]
 
-    # for idRelat, use_case_class, incluir_datas in relatorios_recibo:
-    #     print(f"\n➡️ Relatório {idRelat}")
-    #     recibo = solicitar_recibo(token, idRelat, incluir_datas)
-    #     dados = baixar_relatorio(token, idRelat, recibo)
-    #     use_case_class().executar(dados)
-    #     print(f"✅ {len(dados)} registros sincronizados para {idRelat}")
+    for idRelat, use_case_class, incluir_datas in relatorios_recibo:
+        print(f"\n➡️ Relatório {idRelat}")
+        recibo = solicitar_recibo(token, idRelat, incluir_datas)
+        dados = baixar_relatorio(token, idRelat, recibo)
+        use_case_class().executar(dados)
+        print(f"✅ {len(dados)} registros sincronizados para {idRelat}")
 
     token = obter_token()
 
