@@ -11,7 +11,7 @@ django.setup()
 from core.application.use_cases import (
     # AtualizarConferenciaUseCase,
     AtualizarValoresReceberUseCase,
-    AtualizarDetalhadoProdutoUseCase,
+    # AtualizarDetalhadoProdutoUseCase,
     # # AtualizarServicosUseCase,
     # AtualizarTradeInUseCase,
     # AtualizarEstoqueFisicoUseCase,
@@ -132,7 +132,8 @@ def sincronizar():
     token = obter_token()
 
     relatorios_recibo = [
-        ("integracao/atendimentos/detalhado_produto/", AtualizarDetalhadoProdutoUseCase, True),
+        # ("integracao/atendimentos/detalhado_produto/", AtualizarDetalhadoProdutoUseCase, True),
+        ("integracaoV2/operadora/valores_a_receber/", AtualizarValoresReceberUseCase, True),
         # ("integracao/atendimentos/servicos/", AtualizarServicosUseCase, True),
         # ("integracao/utilitarios/trade_in/", AtualizarTradeInUseCase, True),
         # ("integracao/produtos/estoque_fisico/", AtualizarEstoqueFisicoUseCase, False),
@@ -149,24 +150,20 @@ def sincronizar():
         use_case_class().executar(dados)
         print(f"✅ {len(dados)} registros sincronizados para {idRelat}")
 
-    token = obter_token()
+    # token = obter_token()
 
-    relatorios_paginados = {
-        "valores_a_receber": {
-            "url": f"{BASE_URL}integracaoV1/operadora/valores_a_receber/",
-            "use_case": AtualizarValoresReceberUseCase
-        },
-        # "conferencia": {
-        #     "url": f"{BASE_URL}integracaoV1/atendimentos/conferencia/",
-        #     "use_case": AtualizarConferenciaUseCase
-        # }
-    }
+    # relatorios_paginados = {
+    #     # "conferencia": {
+    #     #     "url": f"{BASE_URL}integracaoV1/atendimentos/conferencia/",
+    #     #     "use_case": AtualizarConferenciaUseCase
+    #     # }
+    # }
 
-    for nome, config in relatorios_paginados.items():
-        print(f"\n🔄 Paginado: {nome}")
-        dados = baixar_paginado(token, config["url"])
-        config["use_case"]().executar(dados)
-        print(f"✅ {len(dados)} registros sincronizados para {nome}")
+    # for nome, config in relatorios_paginados.items():
+    #     print(f"\n🔄 Paginado: {nome}")
+    #     dados = baixar_paginado(token, config["url"])
+    #     config["use_case"]().executar(dados)
+    #     print(f"✅ {len(dados)} registros sincronizados para {nome}")
 
 def loop_principal():
     while True:
