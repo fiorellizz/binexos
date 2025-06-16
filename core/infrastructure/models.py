@@ -220,3 +220,23 @@ class VendedorModel(models.Model):
 
     def __str__(self):
         return f"{self.nome} ({self.codigo})"
+
+class VendaPorProdutoModel(models.Model):
+    data = models.DateField()
+    cod_produto = models.IntegerField()
+    descricao = models.CharField(max_length=255)
+    origem = models.IntegerField()
+    qtd = models.IntegerField()
+    subtotal = models.DecimalField(max_digits=10, decimal_places=2)
+    custo_total = models.DecimalField(max_digits=10, decimal_places=2)
+    local = models.CharField(max_length=255)
+    cod_local = models.IntegerField()
+    vendedor = models.CharField(max_length=255)
+    cod_vendedor = models.IntegerField()
+    ncm = models.CharField(max_length=20, blank=True)
+    cpf = models.CharField(max_length=20, blank=True)
+    grupo = models.CharField(max_length=100, blank=True)
+    marca = models.CharField(max_length=100, blank=True)
+    cod_barras = models.CharField(max_length=50)
+    cod_tipo = models.IntegerField()
+    cadastro_geral = models.IntegerField()

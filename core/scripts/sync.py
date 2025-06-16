@@ -11,6 +11,7 @@ django.setup()
 from core.application.use_cases import (
     # AtualizarConferenciaUseCase,
     AtualizarValoresReceberUseCase,
+    AtualizarVendaPorProdutoUseCase,
     # AtualizarDetalhadoProdutoUseCase,
     # # AtualizarServicosUseCase,
     # AtualizarTradeInUseCase,
@@ -134,6 +135,7 @@ def sincronizar():
     relatorios_recibo = [
         # ("integracao/atendimentos/detalhado_produto/", AtualizarDetalhadoProdutoUseCase, True),
         ("integracaoV2/operadora/valores_a_receber/", AtualizarValoresReceberUseCase, True),
+        ("integracaoV2/produtos/venda_por_produto/", AtualizarVendaPorProdutoUseCase, True)
         # ("integracao/atendimentos/servicos/", AtualizarServicosUseCase, True),
         # ("integracao/utilitarios/trade_in/", AtualizarTradeInUseCase, True),
         # ("integracao/produtos/estoque_fisico/", AtualizarEstoqueFisicoUseCase, False),
@@ -168,8 +170,8 @@ def sincronizar():
 def loop_principal():
     while True:
         sincronizar()
-        print("🕒 Aguardando 1 minutos...")
-        time.sleep(1 * 60)
+        print("🕒 Aguardando 20 minutos...")
+        time.sleep(20 * 60)
 
 if __name__ == "__main__":
     loop_principal()

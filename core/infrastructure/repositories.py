@@ -1,4 +1,4 @@
-from core.infrastructure.models import ConferenciaModel, DetalhadoProdutoModel, EstoqueFisicoModel, EstoquePorLocalModel, MetaPorLocalModel, MetaPorVendedorModel, TradeInModel, ValoresAReceberModel, VendedorModel
+from core.infrastructure.models import ConferenciaModel, DetalhadoProdutoModel, EstoqueFisicoModel, EstoquePorLocalModel, MetaPorLocalModel, MetaPorVendedorModel, TradeInModel, ValoresAReceberModel, VendedorModel, VendaPorProdutoModel
 
 def parse_int(val):
     try:
@@ -257,4 +257,29 @@ class VendedorRepository:
                 gerente=item.get("Gerente", ""),
                 bloqueado=item.get("Bloqueado", ""),
                 local=item.get("Local", "")
+            )
+
+class VendaPorProdutoRepository:
+    def salvar_lista(self, lista):
+        VendaPorProdutoModel.objects.all().delete()
+        for item in lista:
+            VendaPorProdutoModel.objects.create(
+                data=parse_date(item.get("Data")),
+                cod_produto=parse_int(item.get("Cód Produto")),
+                descricao=item.get("Descrição", ""),
+                origem=parse_int(item.get("Origem")),
+                qtd=parse_int(item.get("Qtd")),
+                subtotal=parse_float(item.get("Sub-Total")),
+                custo_total=parse_float(item.get("Custo Total")),
+                local=item.get("Local", ""),
+                cod_local=parse_int(item.get("Cod Local")),
+                vendedor=item.get("Vendedor", ""),
+                cod_vendedor=parse_int(item.get("Cod vendedor")),
+                ncm=item.get("NCM/SH", ""),
+                cpf=item.get("CPF", ""),
+                grupo=item.get("Grupo", ""),
+                marca=item.get("Marca", ""),
+                cod_barras=item.get("Cod Barras", ""),
+                cod_tipo=parse_int(item.get("Cod Tipo")),
+                cadastro_geral=parse_int(item.get("Cadastro Geral")),
             )
