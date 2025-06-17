@@ -23,7 +23,6 @@ def parse_date(valor):
 
 class ConferenciaRepository:
     def salvar_lista(self, lista_dados):
-        ConferenciaModel.objects.all().delete()
         for row in lista_dados:
             ConferenciaModel.objects.create(
                 deslocal=row.get("deslocal", ""),
@@ -56,7 +55,6 @@ class ConferenciaRepository:
 
 class DetalhadoProdutoRepository:
     def salvar_lista(self, lista):
-        DetalhadoProdutoModel.objects.all().delete()
         for item in lista:
             DetalhadoProdutoModel.objects.create(
                 cod_cliente=item.get("Cod Cliente", ""),
@@ -88,7 +86,6 @@ class DetalhadoProdutoRepository:
 
 class EstoqueFisicoRepository:
     def salvar_lista(self, lista):
-        EstoqueFisicoModel.objects.all().delete()
         for item in lista:
             EstoqueFisicoModel.objects.create(
                 descricao=item.get("Descrição", ""),
@@ -104,7 +101,6 @@ class EstoqueFisicoRepository:
 
 class EstoquePorLocalRepository:
     def salvar_lista(self, lista):
-        EstoquePorLocalModel.objects.all().delete()
         for item in lista:
             EstoquePorLocalModel.objects.create(
                 cod_produto=item.get("Cod Produto", ""),
@@ -116,7 +112,6 @@ class EstoquePorLocalRepository:
 
 class MetaPorLocalRepository:
     def salvar_lista(self, lista):
-        MetaPorLocalModel.objects.all().delete()
         for item in lista:
             MetaPorLocalModel.objects.create(
                 mes=parse_int(item.get("Mês")),
@@ -131,7 +126,6 @@ class MetaPorLocalRepository:
 
 class MetaPorVendedorRepository:
     def salvar_lista(self, lista):
-        MetaPorVendedorModel.objects.all().delete()
         for item in lista:
             MetaPorVendedorModel.objects.create(
                 mes=parse_int(item.get("Mês")),
@@ -146,7 +140,6 @@ class MetaPorVendedorRepository:
 
 class TradeInRepository:
     def salvar_lista(self, lista):
-        TradeInModel.objects.all().delete()
         for item in lista:
             TradeInModel.objects.create(
                 data_atend=parse_date(item.get("Data Atend")),
@@ -169,7 +162,6 @@ class TradeInRepository:
 
 class ValoresAReceberRepository:
     def salvar_lista(self, lista):
-        ValoresAReceberModel.objects.all().delete()
         for item in lista:
             ValoresAReceberModel.objects.create(
                 cod_claro=item.get("Cod Claro", ""),
@@ -249,7 +241,6 @@ class ValoresAReceberRepository:
 
 class VendedorRepository:
     def salvar_lista(self, lista):
-        VendedorModel.objects.all().delete()
         for item in lista:
             VendedorModel.objects.create(
                 codigo=item.get("Código", ""),
@@ -261,7 +252,6 @@ class VendedorRepository:
 
 class VendaPorProdutoRepository:
     def salvar_lista(self, lista):
-        VendaPorProdutoModel.objects.all().delete()
         for item in lista:
             VendaPorProdutoModel.objects.create(
                 data=parse_date(item.get("Data")),

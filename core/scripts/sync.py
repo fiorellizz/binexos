@@ -5,6 +5,9 @@ import requests
 from datetime import datetime, timedelta
 from requests.auth import HTTPBasicAuth
 
+from core.infrastructure.models import ValoresAReceberModel, VendaPorProdutoModel
+from core.utils.sincronizacao import limpar_modelos
+
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "meu_projeto.settings")
 django.setup()
 
@@ -84,52 +87,117 @@ def baixar_relatorio(token, idRelat, recibo):
             return []
     return []
 
-def baixar_paginado(token, endpoint_url):
+# def baixar_paginado(token, endpoint_url):
+#     headers = HEADERS.copy()
+#     headers["Authorization"] = f"Bearer {token}"
+#     all_rows = []
+
+#     while True:
+#         response = requests.get(endpoint_url, headers=headers, params={"data_ini": data_ini, "data_fin": data_fin})
+#         if response.status_code == 200:
+#             break
+#         elif response.status_code == 400:
+#             continue
+#         else:
+#             print(f"Erro ao iniciar paginação: {response.status_code}")
+#             return []
+
+#     info = response.json().get("info", {})
+#     total = info.get("totalReg", 0)
+#     per_page = info.get("regPerPage", 1)
+#     total_pages = (total + per_page - 1) // per_page
+
+#     for page in range(1, total_pages + 1):
+#         while True:
+#             resp = requests.get(endpoint_url, headers=headers, params={
+#                 "data_ini": data_ini,
+#                 "data_fin": data_fin,
+#                 "currentPage": page
+#             })
+#             if resp.status_code == 200:
+#                 break
+#             elif resp.status_code == 400:
+#                 continue
+#             elif resp.status_code == 401:
+#                 token = obter_token()
+#                 headers["Authorization"] = f"Bearer {token}"
+#                 break
+#             else:
+#                 print(f"Erro na página {page}: {resp.status_code}")
+#                 return all_rows
+
+#         rows = resp.json().get("list", [])
+#         all_rows.extend(rows)
+#         print(f"Página {page}/{total_pages} com {len(rows)} registros")
+
+#     return all_rows
+
+def baixar_relatorio_por_data(token, idRelat, recibo, data_ini, data_fin):
+    url = f"{BASE_URL}relatorios/"
     headers = HEADERS.copy()
     headers["Authorization"] = f"Bearer {token}"
-    all_rows = []
 
-    while True:
-        response = requests.get(endpoint_url, headers=headers, params={"data_ini": data_ini, "data_fin": data_fin})
+    for _ in range(50):
+        response = requests.get(
+            url,
+            headers=headers,
+            params={
+                "idRelat": idRelat,
+                "recibo": recibo,
+                "data_ini": data_ini.strftime("%Y-%m-%d"),
+                "data_fin": data_fin.strftime("%Y-%m-%d"),
+            },
+        )
         if response.status_code == 200:
-            break
+            data = response.json()
+            head = data.get("head")
+            body = data.get("body", [])
+            return montar_dicts(head, body)
+        elif response.status_code == 202:
+            time.sleep(5)
         elif response.status_code == 400:
             continue
         else:
-            print(f"Erro ao iniciar paginação: {response.status_code}")
+            print(f"Erro ao baixar relatório {idRelat}: {response.status_code}")
             return []
+    return []
 
-    info = response.json().get("info", {})
-    total = info.get("totalReg", 0)
-    per_page = info.get("regPerPage", 1)
-    total_pages = (total + per_page - 1) // per_page
+def gerar_periodos():
+    hoje = datetime.today()
+    periodos = []
 
-    for page in range(1, total_pages + 1):
-        while True:
-            resp = requests.get(endpoint_url, headers=headers, params={
-                "data_ini": data_ini,
-                "data_fin": data_fin,
-                "currentPage": page
-            })
-            if resp.status_code == 200:
-                break
-            elif resp.status_code == 400:
-                continue
-            elif resp.status_code == 401:
-                token = obter_token()
-                headers["Authorization"] = f"Bearer {token}"
-                break
-            else:
-                print(f"Erro na página {page}: {resp.status_code}")
-                return all_rows
+    # Mês atual
+    inicio_mes_atual = hoje.replace(day=1)
+    fim_mes_atual = (inicio_mes_atual + timedelta(days=32)).replace(day=1) - timedelta(days=1)
+    periodos.append(("Mês atual", inicio_mes_atual, fim_mes_atual))
 
-        rows = resp.json().get("list", [])
-        all_rows.extend(rows)
-        print(f"Página {page}/{total_pages} com {len(rows)} registros")
+    # Mês anterior
+    inicio_mes_passado = (inicio_mes_atual - timedelta(days=1)).replace(day=1)
+    fim_mes_passado = inicio_mes_atual - timedelta(days=1)
+    periodos.append(("Mês passado", inicio_mes_passado, fim_mes_passado))
 
-    return all_rows
+    # Mesmo mês do ano anterior
+    try:
+        inicio_mes_ano_passado = inicio_mes_atual.replace(year=inicio_mes_atual.year - 1)
+        fim_mes_ano_passado = fim_mes_atual.replace(year=fim_mes_atual.year - 1)
+    except ValueError:  # fevereiro 29
+        inicio_mes_ano_passado = inicio_mes_atual.replace(year=inicio_mes_atual.year - 1, day=28)
+        fim_mes_ano_passado = fim_mes_atual.replace(year=fim_mes_atual.year - 1, day=28)
+    periodos.append(("Mesmo mês do ano passado", inicio_mes_ano_passado, fim_mes_ano_passado))
+
+    return periodos
 
 def sincronizar():
+
+    # Horario inicial
+    print(f"🕒 Iniciando sincronização em {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+
+    # Limpar modelos antes de sincronizar
+    limpar_modelos([
+        ValoresAReceberModel,
+        VendaPorProdutoModel
+    ])
+    
     token = obter_token()
 
     relatorios_recibo = [
@@ -145,12 +213,17 @@ def sincronizar():
         # ("integracao/utilitarios/meta_por_vendedor/", AtualizarMetaPorVendedorUseCase, False),
     ]
 
-    for idRelat, use_case_class, incluir_datas in relatorios_recibo:
-        print(f"\n➡️ Relatório {idRelat}")
-        recibo = solicitar_recibo(token, idRelat, incluir_datas)
-        dados = baixar_relatorio(token, idRelat, recibo)
-        use_case_class().executar(dados)
-        print(f"✅ {len(dados)} registros sincronizados para {idRelat}")
+    for label, data_ini, data_fin in gerar_periodos():
+        print(f"\n📅 Sincronizando período: {label} ({data_ini.date()} a {data_fin.date()})")
+        for idRelat, use_case_class, incluir_datas in relatorios_recibo:
+            print(f"\n➡️ Relatório {idRelat}")
+            recibo = solicitar_recibo(token, idRelat, incluir_datas=incluir_datas)
+            dados = baixar_relatorio_por_data(token, idRelat, recibo, data_ini, data_fin)
+            use_case_class().executar(dados)
+            print(f"✅ {len(dados)} registros sincronizados para {idRelat} ({label})")
+
+    # Horario final
+    print(f"✅ Sincronização concluída em {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 
     # token = obter_token()
 
@@ -170,8 +243,8 @@ def sincronizar():
 def loop_principal():
     while True:
         sincronizar()
-        print("🕒 Aguardando 20 minutos...")
-        time.sleep(20 * 60)
+        print("🕒 Aguardando 60 minutos...")
+        time.sleep(60 * 60)
 
 if __name__ == "__main__":
     loop_principal()
