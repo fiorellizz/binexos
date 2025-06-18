@@ -236,7 +236,8 @@ class ValoresAReceberRepository:
                 cod_local=item.get("Cod Local", ""),
                 contestar_residencial=item.get("Contestar Residencial", ""),
                 cpf_vendedor=item.get("CPF Vendedor", ""),
-                cod_vendedor=item.get("Cod Vendedor", "")
+                cod_vendedor=item.get("Cod Vendedor", ""),
+                fraquia_total=parse_float(item.get("Franquia Total", 0.0)),
             )
 
 class VendedorRepository:

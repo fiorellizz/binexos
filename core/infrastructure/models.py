@@ -207,6 +207,7 @@ class ValoresAReceberModel(models.Model):
     contestar_residencial = models.CharField(max_length=10, blank=True)
     cpf_vendedor = models.CharField(max_length=20, blank=True)
     cod_vendedor = models.CharField(max_length=20, blank=True)
+    fraquia_total = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
 
     def __str__(self):
         return f"{self.nome} - {self.vendedor} - {self.data}"
