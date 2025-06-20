@@ -36,20 +36,18 @@ HEADERS = {
     "Connection": "keep-alive"
 }
 
-data_ini = (datetime.today() - timedelta(days=35)).strftime("%Y-%m-%d")
-data_fin = datetime.today().strftime("%Y-%m-%d")
-
 def obter_token():
     url = f"{BASE_URL}atoken/index.php"
     response = requests.get(url, auth=HTTPBasicAuth(USERNAME, PASSWORD), headers=HEADERS)
     response.raise_for_status()
     return response.json()["access_token"]
 
-def solicitar_recibo(token, idRelat, incluir_datas=True):
+def solicitar_recibo(token, idRelat, data_ini=None, data_fin=None):
     url = f"{BASE_URL}relatorios/"
     params = {"idRelat": idRelat, "com": "gerarRelatorio"}
-    if incluir_datas:
-        params.update({"data_ini": data_ini, "data_fin": data_fin})
+    if data_ini and data_fin:
+        params.update({"data_ini": data_ini.strftime("%Y-%m-%d"), 
+                      "data_fin": data_fin.strftime("%Y-%m-%d")})
     headers = HEADERS.copy()
     headers["Authorization"] = f"Bearer {token}"
 
@@ -213,14 +211,20 @@ def sincronizar():
         # ("integracao/utilitarios/meta_por_vendedor/", AtualizarMetaPorVendedorUseCase, False),
     ]
 
-    for label, data_ini, data_fin in gerar_periodos():
-        print(f"\n📅 Sincronizando período: {label} ({data_ini.date()} a {data_fin.date()})")
-        for idRelat, use_case_class, incluir_datas in relatorios_recibo:
-            print(f"\n➡️ Relatório {idRelat}")
-            recibo = solicitar_recibo(token, idRelat, incluir_datas=incluir_datas)
-            dados = baixar_relatorio_por_data(token, idRelat, recibo, data_ini, data_fin)
-            use_case_class().executar(dados)
-            print(f"✅ {len(dados)} registros sincronizados para {idRelat} ({label})")
+    for label, data_ini_periodo, data_fin_periodo in gerar_periodos():
+        print(f"\n📅 Sincronizando período: {label} ({data_ini_periodo.date()} a {data_fin_periodo.date()})")
+        
+        for endpoint, use_case_class, incluir_datas in relatorios_recibo:
+            print(f"\n➡️ Relatório {endpoint}")
+            try:
+                recibo = solicitar_recibo(token, endpoint, 
+                                        data_ini_periodo if incluir_datas else None, 
+                                        data_fin_periodo if incluir_datas else None)
+                dados = baixar_relatorio_por_data(token, endpoint, recibo, data_ini_periodo, data_fin_periodo)
+                use_case_class().executar(dados)
+                print(f"✅ {len(dados)} registros sincronizados para {endpoint} ({label})")
+            except Exception as e:
+                print(f"❌ Erro ao processar {endpoint} para {label}: {str(e)}")
 
     # Horario final
     print(f"✅ Sincronização concluída em {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
