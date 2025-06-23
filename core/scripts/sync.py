@@ -13,6 +13,7 @@ django.setup()
 
 from core.application.use_cases import (
     # AtualizarConferenciaUseCase,
+    AtualizarStatusGEDUseCase,
     AtualizarValoresReceberUseCase,
     AtualizarVendaPorProdutoUseCase,
     # AtualizarDetalhadoProdutoUseCase,
@@ -201,7 +202,8 @@ def sincronizar():
     relatorios_recibo = [
         # ("integracao/atendimentos/detalhado_produto/", AtualizarDetalhadoProdutoUseCase, True),
         ("integracaoV2/operadora/valores_a_receber/", AtualizarValoresReceberUseCase, True),
-        ("integracaoV2/produtos/venda_por_produto/", AtualizarVendaPorProdutoUseCase, True)
+        ("integracaoV2/produtos/venda_por_produto/", AtualizarVendaPorProdutoUseCase, True),
+        ("integracaoV2/utilitarios/status_ged/", AtualizarStatusGEDUseCase, False),
         # ("integracao/atendimentos/servicos/", AtualizarServicosUseCase, True),
         # ("integracao/utilitarios/trade_in/", AtualizarTradeInUseCase, True),
         # ("integracao/produtos/estoque_fisico/", AtualizarEstoqueFisicoUseCase, False),
@@ -211,16 +213,30 @@ def sincronizar():
         # ("integracao/utilitarios/meta_por_vendedor/", AtualizarMetaPorVendedorUseCase, False),
     ]
 
-    for label, data_ini_periodo, data_fin_periodo in gerar_periodos():
-        print(f"\n📅 Sincronizando período: {label} ({data_ini_periodo.date()} a {data_fin_periodo.date()})")
-        
-        for endpoint, use_case_class, incluir_datas in relatorios_recibo:
-            print(f"\n➡️ Relatório {endpoint}")
+    for endpoint, use_case_class, incluir_datas in relatorios_recibo:
+        if incluir_datas:
+            for label, data_ini_periodo, data_fin_periodo in gerar_periodos():
+                print(f"\n📅 Sincronizando período: {label} ({data_ini_periodo.date()} a {data_fin_periodo.date()})")
+                print(f"➡️ Relatório {endpoint}")
+                try:
+                    recibo = solicitar_recibo(token, endpoint, data_ini_periodo, data_fin_periodo)
+                    dados = baixar_relatorio_por_data(token, endpoint, recibo, data_ini_periodo, data_fin_periodo)
+                    use_case_class().executar(dados)
+                    print(f"✅ {len(dados)} registros sincronizados para {endpoint} ({label})")
+                except Exception as e:
+                    print(f"❌ Erro ao processar {endpoint} para {label}: {str(e)}")
+        else:
+            # Apenas o mês atual
+            hoje = datetime.today()
+            data_ini = hoje.replace(day=1)
+            data_fim = (data_ini + timedelta(days=32)).replace(day=1) - timedelta(days=1)
+            label = "Mês atual"
+
+            print(f"\n📅 Sincronizando período: {label} ({data_ini.date()} a {data_fim.date()})")
+            print(f"➡️ Relatório {endpoint}")
             try:
-                recibo = solicitar_recibo(token, endpoint, 
-                                        data_ini_periodo if incluir_datas else None, 
-                                        data_fin_periodo if incluir_datas else None)
-                dados = baixar_relatorio_por_data(token, endpoint, recibo, data_ini_periodo, data_fin_periodo)
+                recibo = solicitar_recibo(token, endpoint, data_ini, data_fim)
+                dados = baixar_relatorio_por_data(token, endpoint, recibo, data_ini, data_fim)
                 use_case_class().executar(dados)
                 print(f"✅ {len(dados)} registros sincronizados para {endpoint} ({label})")
             except Exception as e:
