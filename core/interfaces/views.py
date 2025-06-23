@@ -1,8 +1,8 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from core.decorators import require_token
-from core.infrastructure.models import ConferenciaModel, DetalhadoProdutoModel, EstoqueFisicoModel, EstoquePorLocalModel, MetaPorLocalModel, MetaPorVendedorModel, TradeInModel, ValoresAReceberModel, VendaPorProdutoModel, VendedorModel
-from core.serializers import ConferenciaSerializer, DetalhadoProdutoSerializer, EstoqueFisicoSerializer, EstoquePorLocalSerializer, MetaPorLocalSerializer, MetaPorVendedorSerializer, TradeInSerializer, ValoresAReceberSerializer, VendaPorProdutoSerializer, VendedorSerializer
+from core.infrastructure.models import ConferenciaModel, DetalhadoProdutoModel, EstoqueFisicoModel, EstoquePorLocalModel, MetaPorLocalModel, MetaPorVendedorModel, StatusGEDModel, TradeInModel, ValoresAReceberModel, VendaPorProdutoModel, VendedorModel
+from core.serializers import ConferenciaSerializer, DetalhadoProdutoSerializer, EstoqueFisicoSerializer, EstoquePorLocalSerializer, MetaPorLocalSerializer, MetaPorVendedorSerializer, StatusGEDSerializer, TradeInSerializer, ValoresAReceberSerializer, VendaPorProdutoSerializer, VendedorSerializer
 
 class ConferenciaAPIView(APIView):
     @require_token
@@ -80,4 +80,12 @@ class VendaPorProdutoAPIView(APIView):
     def get(self, request):
         dados = VendaPorProdutoModel.objects.all()
         serializer = VendaPorProdutoSerializer(dados, many=True)
+        return Response(serializer.data)
+    
+class StatusGEDAPIView(APIView):
+
+    @require_token
+    def get(self, request):
+        dados = StatusGEDModel.objects.all()
+        serializer = StatusGEDSerializer(dados, many=True)
         return Response(serializer.data)

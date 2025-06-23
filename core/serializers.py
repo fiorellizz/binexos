@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from core.infrastructure.models import ConferenciaModel, DetalhadoProdutoModel, EstoqueFisicoModel, EstoquePorLocalModel, MetaPorLocalModel, MetaPorVendedorModel, TradeInModel, ValoresAReceberModel, VendaPorProdutoModel, VendedorModel
+from core.infrastructure.models import ConferenciaModel, DetalhadoProdutoModel, EstoqueFisicoModel, EstoquePorLocalModel, MetaPorLocalModel, MetaPorVendedorModel, StatusGEDModel, TradeInModel, ValoresAReceberModel, VendaPorProdutoModel, VendedorModel
 
 class ConferenciaSerializer(serializers.ModelSerializer):
     class Meta:
@@ -49,4 +49,9 @@ class VendedorSerializer(serializers.ModelSerializer):
 class VendaPorProdutoSerializer(serializers.ModelSerializer):
     class Meta:
         model = VendaPorProdutoModel
+        fields = '__all__'
+
+class StatusGEDSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StatusGEDModel
         fields = '__all__'

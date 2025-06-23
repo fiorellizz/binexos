@@ -1,4 +1,4 @@
-from core.infrastructure.models import ConferenciaModel, DetalhadoProdutoModel, EstoqueFisicoModel, EstoquePorLocalModel, MetaPorLocalModel, MetaPorVendedorModel, TradeInModel, ValoresAReceberModel, VendedorModel, VendaPorProdutoModel
+from core.infrastructure.models import ConferenciaModel, DetalhadoProdutoModel, EstoqueFisicoModel, EstoquePorLocalModel, MetaPorLocalModel, MetaPorVendedorModel, StatusGEDModel, TradeInModel, ValoresAReceberModel, VendedorModel, VendaPorProdutoModel
 
 def parse_int(val):
     try:
@@ -273,4 +273,62 @@ class VendaPorProdutoRepository:
                 cod_barras=item.get("Cod Barras", ""),
                 cod_tipo=parse_int(item.get("Cod Tipo")),
                 cadastro_geral=parse_int(item.get("Cadastro Geral")),
+            )
+
+class StatusGEDRepository:
+    def salvar_lista(self, lista):
+        for item in lista:
+            StatusGEDModel.objects.create(
+                id_ged=parse_int(item.get("Id")),
+                atendimento=parse_int(item.get("Atendimento")),
+                data=parse_date(item.get("Data")),
+                telefone=item.get("Telefone", ""),
+                serial=item.get("Serial", ""),
+                descricao=item.get("Descrição", ""),
+                pagamento=item.get("Pagamento", ""),
+                cod_ativacao=item.get("Cod Ativação", ""),
+                cod_plano=item.get("Cod Plano", ""),
+                plano=item.get("Plano", ""),
+                vendedor=item.get("Vendedor", ""),
+                local=item.get("Local", ""),
+                cliente=item.get("Cliente", ""),
+                protocolo_ged=item.get("Protocolo GED", ""),
+                status_ged=item.get("Stats GED", ""),
+                data_ged=parse_date(item.get("Data GED")),
+                data_digitalizacao=parse_date(item.get("Data Digitalização GED")),
+                data_d=parse_date(item.get("Data (D)")),
+                data_a=parse_date(item.get("Data (A)")),
+                imei=item.get("Imei", ""),
+                cpf_ged=item.get("CPF (GED)", ""),
+                ntc_ged=item.get("NTC (GED)", ""),
+                plano_completo=item.get("Plano", ""),
+                primario=item.get("Primário", ""),
+                secundario=item.get("Secundário", ""),
+                cpf=item.get("CPF", ""),
+                pessoa_tipo=item.get("Pessoa Física/Jurídica", ""),
+                plano_g=item.get("Plano (G)", ""),
+                cadastro_geral=parse_int(item.get("Cadastro Geral")),
+                codplanod=parse_int(item.get("codplanod")),
+                codplanoc=parse_int(item.get("codplanoc")),
+                codplanocddd=parse_int(item.get("codplanocddd")),
+                codplanoddd=parse_int(item.get("codplanoddd")),
+                cod_combo=item.get("Cod Combo", ""),
+                sinalizacao=item.get("Sinalização", ""),
+                id_plano=parse_int(item.get("Id Plano")),
+                preco_pre=parse_float(item.get("Preço Pré")),
+                preco_tabela=parse_float(item.get("Preço tabela")),
+                portabilidade=item.get("Portabilidade", ""),
+                parcelas=parse_int(item.get("Parcelas")),
+                plano_cg_titular=item.get("Plano CG (titular)", ""),
+                dependente=item.get("Dependente", ""),
+                plano_titular=item.get("Plano (titular)", ""),
+                ignorar=item.get("Ignorar", ""),
+                id_ged_final=parse_int(item.get("Id GED")),
+                desc_ativacao=item.get("Desc Ativação", ""),
+                desc_combo=item.get("Desc Combo", ""),
+                ntc_provisorio=item.get("NTC Provisório", ""),
+                smp=item.get("SMP", ""),
+                seguro=item.get("Seguro Proteção Móvel", ""),
+                cod_local=parse_int(item.get("Cod Local")),
+                cod_vendedor=parse_int(item.get("Cod Vendedor")),
             )
