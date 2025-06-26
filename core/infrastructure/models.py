@@ -241,6 +241,7 @@ class VendaPorProdutoModel(models.Model):
     cod_barras = models.CharField(max_length=50)
     cod_tipo = models.IntegerField()
     cadastro_geral = models.IntegerField()
+    atendimento = models.IntegerField()
 
 class StatusGEDModel(models.Model):
     id_ged = models.IntegerField()

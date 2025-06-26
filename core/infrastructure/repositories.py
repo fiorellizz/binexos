@@ -273,6 +273,7 @@ class VendaPorProdutoRepository:
                 cod_barras=item.get("Cod Barras", ""),
                 cod_tipo=parse_int(item.get("Cod Tipo")),
                 cadastro_geral=parse_int(item.get("Cadastro Geral")),
+                atendimento=parse_int(item.get("Atendimento", 0)),
             )
 
 class StatusGEDRepository:
