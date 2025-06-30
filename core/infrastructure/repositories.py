@@ -88,15 +88,32 @@ class EstoqueFisicoRepository:
     def salvar_lista(self, lista):
         for item in lista:
             EstoqueFisicoModel.objects.create(
+                codigo=item.get("Código", ""),
                 descricao=item.get("Descrição", ""),
+                cod_produto_loja=item.get("Cod Produto (loja)", ""),
                 estoque=parse_int(item.get("Estoque")),
-                dias=parse_int(item.get("Dias")),
+                custo=parse_float(item.get("Custo")),
+                ncm_sh=item.get("NCM/SH", ""),
+                n_serie=item.get("N Serie", ""),
+                tag=item.get("Tag", ""),
+                telefone=item.get("Telefone", ""),
+                data_entrada=parse_date(item.get("Data Entrada")),
+                nf_entrada=item.get("NF Entrada", ""),
+                cod_cliente_fornecedor=item.get("Cod Cliente/Fornecedor", ""),
+                dias_em_estoque=parse_int(item.get("Dias em estoque")),
                 defeito=item.get("Defeito", ""),
                 local=item.get("Local", ""),
-                tipo=item.get("Tipo", ""),
-                data_entrada=parse_date(item.get("Data Entrada")),
-                venda=parse_float(item.get("Venda")),
-                custo=parse_float(item.get("Custo")),
+                local_origem=item.get("Local Origem", ""),
+                preco_venda=parse_float(item.get("Preço Venda")),
+                preco_prazo=parse_float(item.get("Preço a Prazo")),
+                sap=item.get("SAP", ""),
+                grupo=item.get("Grupo", ""),
+                possui_serial=item.get("Possui Serial", ""),
+                descricao_referencia=item.get("Descrição Referencia", ""),
+                tipo_movimentacao=item.get("Tipo Movimentação", ""),
+                estoque_p=parse_int(item.get("Estoque P")),
+                tag_rfid=item.get("Tag RFID", ""),
+                cod_local=item.get("Cod Local", ""),
             )
 
 class EstoquePorLocalRepository:

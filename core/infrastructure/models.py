@@ -63,18 +63,36 @@ class DetalhadoProdutoModel(models.Model):
         return f"{self.vendedor} - {self.modelo} - {self.numero}"
 
 class EstoqueFisicoModel(models.Model):
+    codigo = models.CharField(max_length=50, null=True, blank=True)
     descricao = models.CharField(max_length=255)
+    cod_produto_loja = models.CharField(max_length=100, null=True, blank=True)
     estoque = models.IntegerField(null=True, blank=True)
-    dias = models.IntegerField(null=True, blank=True)
-    defeito = models.CharField(max_length=10)
-    local = models.CharField(max_length=100)
-    tipo = models.CharField(max_length=10)
+    custo = models.DecimalField(max_digits=15, decimal_places=4, null=True, blank=True)
+    ncm_sh = models.CharField(max_length=20, null=True, blank=True)
+    n_serie = models.CharField(max_length=100, null=True, blank=True)
+    tag = models.CharField(max_length=100, null=True, blank=True)
+    telefone = models.CharField(max_length=20, null=True, blank=True)
     data_entrada = models.DateField(null=True, blank=True)
-    venda = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)
-    custo = models.DecimalField(max_digits=15, decimal_places=3, null=True, blank=True)
+    nf_entrada = models.CharField(max_length=100, null=True, blank=True)
+    cod_cliente_fornecedor = models.CharField(max_length=100, null=True, blank=True)
+    dias_em_estoque = models.IntegerField(null=True, blank=True)
+    defeito = models.CharField(max_length=10, null=True, blank=True)
+    local = models.CharField(max_length=100)
+    local_origem = models.CharField(max_length=100, null=True, blank=True)
+    preco_venda = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)
+    preco_prazo = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)
+    sap = models.CharField(max_length=100, null=True, blank=True)
+    grupo = models.CharField(max_length=100, null=True, blank=True)
+    possui_serial = models.CharField(max_length=1, null=True, blank=True)
+    descricao_referencia = models.CharField(max_length=255, null=True, blank=True)
+    tipo_movimentacao = models.CharField(max_length=10, null=True, blank=True)
+    estoque_p = models.IntegerField(null=True, blank=True)
+    tag_rfid = models.CharField(max_length=100, null=True, blank=True)
+    cod_local = models.CharField(max_length=100, null=True, blank=True)
 
     def __str__(self):
         return f"{self.descricao} - {self.local}"
+
 
 class EstoquePorLocalModel(models.Model):
     cod_produto = models.CharField(max_length=50)
