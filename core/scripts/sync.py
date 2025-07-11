@@ -5,7 +5,7 @@ import requests
 from datetime import datetime, timedelta
 from requests.auth import HTTPBasicAuth
 
-from core.infrastructure.models import ValoresAReceberModel, VendaPorProdutoModel
+from core.infrastructure.models import EstoqueFisicoModel, StatusGEDModel, ValoresAReceberModel, VendaPorProdutoModel
 from core.utils.sincronizacao import limpar_modelos
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "meu_projeto.settings")
@@ -194,7 +194,9 @@ def sincronizar():
     # Limpar modelos antes de sincronizar
     limpar_modelos([
         ValoresAReceberModel,
-        VendaPorProdutoModel
+        VendaPorProdutoModel,
+        StatusGEDModel,
+        EstoqueFisicoModel,
     ])
     
     token = obter_token()
@@ -263,8 +265,8 @@ def sincronizar():
 def loop_principal():
     while True:
         sincronizar()
-        print("🕒 Aguardando 60 minutos...")
-        time.sleep(60 * 60)
+        print("🕒 Aguardando 30 minutos...")
+        time.sleep(60 * 30)
 
 if __name__ == "__main__":
     loop_principal()
