@@ -186,6 +186,17 @@ def gerar_periodos():
 
     return periodos
 
+def gerar_ultimos_tres_meses():
+    hoje = datetime.today().replace(day=1)
+    periodos = []
+    for i in range(3):
+        inicio_mes = (hoje - timedelta(days=1)).replace(day=1) if i > 0 else hoje
+        if i > 0:
+            hoje = inicio_mes
+        fim_mes = (inicio_mes + timedelta(days=32)).replace(day=1) - timedelta(days=1)
+        periodos.append((f"Mês {i+1} atrás" if i else "Mês atual", inicio_mes, fim_mes))
+    return periodos
+
 def sincronizar():
 
     # Horario inicial
@@ -216,7 +227,19 @@ def sincronizar():
     ]
 
     for endpoint, use_case_class, incluir_datas in relatorios_recibo:
-        if incluir_datas:
+
+        if use_case_class == AtualizarStatusGEDUseCase:
+            # Apenas Status GED → últimos 3 meses
+            for label, data_ini_periodo, data_fin_periodo in gerar_ultimos_tres_meses():
+                print(f"\n📅 Sincronizando Status GED: {label} ({data_ini_periodo.date()} a {data_fin_periodo.date()})")
+                try:
+                    recibo = solicitar_recibo(token, endpoint, data_ini_periodo, data_fin_periodo)
+                    dados = baixar_relatorio_por_data(token, endpoint, recibo, data_ini_periodo, data_fin_periodo)
+                    use_case_class().executar(dados)
+                    print(f"✅ {len(dados)} registros sincronizados para {endpoint} ({label})")
+                except Exception as e:
+                    print(f"❌ Erro ao processar {endpoint} para {label}: {str(e)}")
+        elif incluir_datas:
             for label, data_ini_periodo, data_fin_periodo in gerar_periodos():
                 print(f"\n📅 Sincronizando período: {label} ({data_ini_periodo.date()} a {data_fin_periodo.date()})")
                 print(f"➡️ Relatório {endpoint}")
@@ -263,10 +286,7 @@ def sincronizar():
     #     print(f"✅ {len(dados)} registros sincronizados para {nome}")
 
 def loop_principal():
-    while True:
-        sincronizar()
-        print("🕒 Aguardando 30 minutos...")
-        time.sleep(60 * 30)
+    sincronizar()
 
 if __name__ == "__main__":
     loop_principal()
