@@ -228,18 +228,18 @@ def sincronizar():
 
     for endpoint, use_case_class, incluir_datas in relatorios_recibo:
 
-        # if use_case_class == AtualizarStatusGEDUseCase:
-        #     # Apenas Status GED → últimos 3 meses
-        #     for label, data_ini_periodo, data_fin_periodo in gerar_ultimos_tres_meses():
-        #         print(f"\n📅 Sincronizando Status GED: {label} ({data_ini_periodo.date()} a {data_fin_periodo.date()})")
-        #         try:
-        #             recibo = solicitar_recibo(token, endpoint, data_ini_periodo, data_fin_periodo)
-        #             dados = baixar_relatorio_por_data(token, endpoint, recibo, data_ini_periodo, data_fin_periodo)
-        #             use_case_class().executar(dados)
-        #             print(f"✅ {len(dados)} registros sincronizados para {endpoint} ({label})")
-        #         except Exception as e:
-        #             print(f"❌ Erro ao processar {endpoint} para {label}: {str(e)}")
-        if incluir_datas:
+        if use_case_class == AtualizarStatusGEDUseCase:
+            # Apenas Status GED → últimos 3 meses
+            for label, data_ini_periodo, data_fin_periodo in gerar_ultimos_tres_meses():
+                print(f"\n📅 Sincronizando Status GED: {label} ({data_ini_periodo.date()} a {data_fin_periodo.date()})")
+                try:
+                    recibo = solicitar_recibo(token, endpoint, data_ini_periodo, data_fin_periodo)
+                    dados = baixar_relatorio_por_data(token, endpoint, recibo, data_ini_periodo, data_fin_periodo)
+                    use_case_class().executar(dados)
+                    print(f"✅ {len(dados)} registros sincronizados para {endpoint} ({label})")
+                except Exception as e:
+                    print(f"❌ Erro ao processar {endpoint} para {label}: {str(e)}")
+        elif incluir_datas:
             for label, data_ini_periodo, data_fin_periodo in gerar_periodos():
                 print(f"\n📅 Sincronizando período: {label} ({data_ini_periodo.date()} a {data_fin_periodo.date()})")
                 print(f"➡️ Relatório {endpoint}")
