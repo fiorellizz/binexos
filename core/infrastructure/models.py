@@ -226,6 +226,7 @@ class ValoresAReceberModel(models.Model):
     cpf_vendedor = models.CharField(max_length=20, blank=True)
     cod_vendedor = models.CharField(max_length=20, blank=True)
     fraquia_total = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    lancamento = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return f"{self.nome} - {self.vendedor} - {self.data}"
@@ -260,6 +261,7 @@ class VendaPorProdutoModel(models.Model):
     cod_tipo = models.IntegerField()
     cadastro_geral = models.IntegerField()
     atendimento = models.IntegerField()
+    lancamento = models.DateTimeField(null=True, blank=True)
 
 class StatusGEDModel(models.Model):
     id_ged = models.IntegerField()
