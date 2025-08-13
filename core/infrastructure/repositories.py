@@ -22,12 +22,16 @@ def parse_date(valor):
     return None
 
 from datetime import datetime
+from django.utils import timezone
 
 def parse_datetime(value):
     if not value:
         return None
     try:
-        return datetime.strptime(value, "%Y-%m-%d %H:%M:%S")
+        dt = datetime.strptime(value, "%Y-%m-%d %H:%M:%S")
+        if timezone.is_naive(dt):
+            dt = timezone.make_aware(dt)
+        return dt
     except Exception:
         return None
 
@@ -265,7 +269,7 @@ class ValoresAReceberRepository:
                 cpf_vendedor=item.get("CPF Vendedor", ""),
                 cod_vendedor=item.get("Cod Vendedor", ""),
                 fraquia_total=parse_float(item.get("Franquia Total", 0.0)),
-                lancamento =parse_datetime(item.get("lancamento")),
+                lancamento=parse_datetime(item.get("Lançamento")),
             )
 
 class VendedorRepository:
@@ -302,7 +306,7 @@ class VendaPorProdutoRepository:
                 cod_tipo=parse_int(item.get("Cod Tipo")),
                 cadastro_geral=parse_int(item.get("Cadastro Geral")),
                 atendimento=parse_int(item.get("Atendimento", 0)),
-                lancamento =parse_datetime(item.get("lancamento")),
+                lancamento=parse_datetime(item.get("Lançamento")),
             )
 
 class StatusGEDRepository:
